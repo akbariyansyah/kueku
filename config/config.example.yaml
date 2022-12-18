@@ -1,0 +1,15 @@
+appname: kueku
+version: v1.0
+port: 8019
+
+database:
+    driver: mysql
+    dsn: "root:secret@tcp(127.0.0.1:3306)/kueku?parseTime=true"
+    MaxIdleConn: 15
+    ConnMaxLifetime: 1 # in hours
+    maxOpenConn: 100
+
+server:
+    readTimeOut: 15s # in seconds
+    writeTimeOut: 15s # in seconds
+    shutdownDelay: 2s # in seconds
