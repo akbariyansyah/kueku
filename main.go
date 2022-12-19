@@ -1,6 +1,8 @@
 package main
 
-import "github.com/akbariyansyah/kueku/cmd"
+import (
+	"kueku/cmd"
+)
 
 func main() {
 	cmd.Run()
