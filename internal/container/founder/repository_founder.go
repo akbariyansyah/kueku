@@ -3,13 +3,14 @@ package founder
 import (
 	"kueku/internal/container"
 	"kueku/internal/domain/cake"
+	"kueku/internal/persistence"
 	repo "kueku/internal/persistence/repository/sqlx"
 
 	"github.com/jmoiron/sqlx"
 )
 
 type repository struct {
-	DB    *sqlx.DB
+	DB    *persistence.DB
 	query container.Queries
 
 	cakeRepo cake.Repository
@@ -25,5 +26,5 @@ func (r *repository) CakeRepository() cake.Repository {
 
 // NewRepository .
 func NewRepository(DB *sqlx.DB, query container.Queries) container.Repository {
-	return &repository{DB: DB, query: query}
+	return &repository{DB: &persistence.DB{DB: DB}, query: query}
 }

@@ -9,7 +9,6 @@ import (
 
 	"github.com/DATA-DOG/go-sqlmock"
 	"github.com/golang/mock/gomock"
-
 	"github.com/jmoiron/sqlx"
 	"github.com/stretchr/testify/suite"
 )
@@ -43,7 +42,7 @@ func (t *dbTestSuite) TearDownTest() {
 }
 
 func (t *dbTestSuite) TestPing_NoError() {
-	err := t.db.Ping()
+	err := t.db.Ping(t.ctx)
 	t.NoError(err)
 }
 
@@ -169,42 +168,4 @@ func (t *dbTestSuite) TestExecContext_TxOk() {
 
 	t.NoError(t.mockSQL.ExpectationsWereMet())
 	t.Error(err)
-}
-
-func (t *dbTestSuite) TestQueryRowxContext_TxNotOk() {
-	row := t.db.QueryRowxContext(t.ctx, "", nil)
-
-	t.Error(row.Err())
-}
-
-func (t *dbTestSuite) TestQueryRowxContext_TxOk() {
-	t.mockSQL.ExpectBegin()
-	t.mockSQL.ExpectRollback()
-
-	err := t.db.Tx(t.ctx, func(ctx context.Context, e chan error) {
-		row := t.db.QueryRowxContext(ctx, "", "")
-		e <- row.Err()
-		return
-	})
-
-	t.NoError(t.mockSQL.ExpectationsWereMet())
-	t.Error(err)
-}
-
-func BenchmarkDB_QueryRowxContext(b *testing.B) {
-	dbMock, _, _ := sqlmock.New()
-	sqlxMock := sqlx.NewDb(dbMock, "sqlmock")
-	db := persistence.DB{DB: sqlxMock}
-	ctx := context.Background()
-
-	b.Run("NoTx", func(b *testing.B) {
-		_ = db.QueryRowxContext(ctx, "")
-	})
-
-	b.Run("Tx", func(b *testing.B) {
-		_ = db.Tx(ctx, func(ctx context.Context, err chan error) {
-			row := db.QueryRowxContext(ctx, "")
-			err <- row.Err()
-		})
-	})
 }

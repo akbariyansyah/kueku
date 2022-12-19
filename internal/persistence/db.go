@@ -4,8 +4,8 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
-
 	"github.com/jmoiron/sqlx"
+
 )
 
 type Sqlx interface {
@@ -14,23 +14,22 @@ type Sqlx interface {
 	sqlx.ExecerContext
 	sqlx.QueryerContext
 }
-
-type DB struct {
-	*sqlx.DB
-}
-
 type UnitOfWork interface {
 	Tx(ctx context.Context, fun func(ctx context.Context, err chan error)) error
 }
 
 // Pinger .
 type Pinger interface {
-	Ping() error
+	Ping(ctx context.Context) error
+}
+
+type DB struct {
+	*sqlx.DB
 }
 
 func (r *DB) Startup() error               { return nil }
 func (r *DB) Shutdown() error              { return r.DB.Close() }
-func (r *DB) Ping() error { return r.DB.Ping() }
+func (r *DB) Ping(_ context.Context) error { return r.DB.Ping() }
 
 func (r *DB) Tx(ctx context.Context, fun func(ctx context.Context, err chan error)) error {
 	e := make(chan error, 1)

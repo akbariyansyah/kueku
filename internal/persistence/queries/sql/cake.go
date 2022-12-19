@@ -35,8 +35,8 @@ func (c *Cake) GetByID(id int) (string, []interface{}, error) {
 		"id",
 		"title",
 		"description",
-		"rating",
 		"image",
+		"rating",
 		"created_at",
 		"updated_at",
 	).From(cakeTable).Where(
@@ -51,16 +51,16 @@ func (c *Cake) Create(data *cake.Cake) (string, []interface{}, error) {
 		"id",
 		"title",
 		"description",
-		"rating",
 		"image",
+		"rating",
 		"created_at",
 		"updated_at",
 	).Values(
 		data.ID,
 		data.Title,
 		data.Description,
-		data.Rating,
 		data.Image,
+		data.Rating,
 		data.CreatedAt,
 		data.UpdatedAt,
 	)
@@ -72,8 +72,8 @@ func (c *Cake) Update(data *cake.Cake) (string, []interface{}, error) {
 	sql := c.Sql.Update(cakeTable).
 		Set("title", data.Title).
 		Set("description", data.Description).
-		Set("rating", data.Rating).
 		Set("image", data.Image).
+		Set("rating", data.Rating).
 		Set("updated_at", data.UpdatedAt).
 		Where(sq.Eq{"id": data.ID})
 

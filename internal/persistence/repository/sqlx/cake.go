@@ -3,17 +3,15 @@ package sqlx
 import (
 	"context"
 	"database/sql"
-	"fmt"
 	"kueku/internal/domain/cake"
+	"kueku/internal/persistence"
 	"kueku/internal/persistence/queries"
 	"kueku/internal/persistence/repository"
-
-	"github.com/jmoiron/sqlx"
 )
 
 // Cake .
 type Cake struct {
-	DB    *sqlx.DB
+	DB    persistence.Sqlx
 	Query queries.Cake
 }
 
@@ -21,13 +19,12 @@ type Cake struct {
 func (r *Cake) Fetch(ctx context.Context) (cake.Cakes, error) {
 	query, args, err := r.Query.Fetch()
 	if err != nil {
-		return nil, fmt.Errorf("%q : %e", repository.ErrQuery, err)
+		return nil, repository.NewErrQuery(err)
 	}
 
 	rows, err := r.DB.QueryxContext(ctx, query, args...)
 	if err != nil {
-		return nil, fmt.Errorf("%q : %e", repository.ErrDatabase, err)
-
+		return nil, repository.NewErrDatabase(err)
 	}
 
 	var cakes cake.Cakes
@@ -43,7 +40,7 @@ func (r *Cake) Fetch(ctx context.Context) (cake.Cakes, error) {
 			&c.CreatedAt,
 			&c.UpdatedAt,
 		); err != nil {
-			return nil, fmt.Errorf("%q : %e", repository.ErrDatabase, err)
+			return nil, repository.NewErrDatabase(err)
 		}
 		cakes = append(cakes, c)
 	}
@@ -54,7 +51,7 @@ func (r *Cake) Fetch(ctx context.Context) (cake.Cakes, error) {
 func (r *Cake) GetByID(ctx context.Context, id int) (*cake.Cake, error) {
 	query, args, err := r.Query.GetByID(id)
 	if err != nil {
-		return nil, fmt.Errorf("%q : %e", repository.ErrQuery, err)
+		return nil, repository.NewErrQuery(err)
 	}
 
 	p := new(cake.Cake)
@@ -70,7 +67,7 @@ func (r *Cake) GetByID(ctx context.Context, id int) (*cake.Cake, error) {
 		if err == sql.ErrNoRows {
 			return nil, cake.ErrNotFound
 		}
-		return nil, fmt.Errorf("%q : %e", repository.ErrDatabase, err)
+		return nil, repository.NewErrDatabase(err)
 
 	}
 
@@ -81,10 +78,10 @@ func (r *Cake) GetByID(ctx context.Context, id int) (*cake.Cake, error) {
 func (r *Cake) Create(ctx context.Context, data *cake.Cake) error {
 	query, args, err := r.Query.Create(data)
 	if err != nil {
-		return fmt.Errorf("%q : %e", repository.ErrQuery, err)
+		return repository.NewErrQuery(err)
 	}
 	if _, err := r.DB.ExecContext(ctx, query, args...); err != nil {
-		return fmt.Errorf("%q : %e", repository.ErrDatabase, err)
+		return repository.NewErrDatabase(err)
 	}
 	return nil
 }
@@ -93,10 +90,10 @@ func (r *Cake) Create(ctx context.Context, data *cake.Cake) error {
 func (r *Cake) Update(ctx context.Context, data *cake.Cake) error {
 	query, args, err := r.Query.Update(data)
 	if err != nil {
-		return fmt.Errorf("%q : %e", repository.ErrQuery, err)
+		return repository.NewErrQuery(err)
 	}
 	if _, err := r.DB.ExecContext(ctx, query, args...); err != nil {
-		return fmt.Errorf("%q : %e", repository.ErrDatabase, err)
+		return repository.NewErrDatabase(err)
 
 	}
 	return nil
@@ -106,10 +103,11 @@ func (r *Cake) Update(ctx context.Context, data *cake.Cake) error {
 func (r *Cake) Delete(ctx context.Context, id int) error {
 	query, args, err := r.Query.Delete(id)
 	if err != nil {
-		return fmt.Errorf("%q : %e", repository.ErrQuery, err)
+		return repository.NewErrQuery(err)
 	}
+
 	if _, err := r.DB.ExecContext(ctx, query, args...); err != nil {
-		return fmt.Errorf("%q : %e", repository.ErrDatabase, err)
+		return repository.NewErrDatabase(err)
 
 	}
 	return nil

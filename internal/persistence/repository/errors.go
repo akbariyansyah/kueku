@@ -14,10 +14,10 @@ var (
 
 // NewErrQuery . 
 func NewErrQuery(err error) error {
-	return fmt.Errorf("%q : %e", ErrQuery, err)
+	return fmt.Errorf("%w : %q", ErrQuery, err)
 }
 
 // NewErrDatabase . 
 func NewErrDatabase(err error) error {
-	return fmt.Errorf("%q : %e", ErrDatabase, err)
+	return fmt.Errorf("%w : %q", ErrDatabase, err)
 }
