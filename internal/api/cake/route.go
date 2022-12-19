@@ -16,6 +16,6 @@ func CakeRoute(
 	v1.GET("/cakes/:id", handler.Detail)
 	v1.POST("/cakes", handler.Create)
 	v1.PUT("/cakes/:id", handler.Update)
-	v1.DELETE("/cakes/:id", handler.Detail)
+	v1.DELETE("/cakes/:id", handler.Delete)
 
 }

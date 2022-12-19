@@ -1,6 +1,7 @@
 package cake
 
 import (
+	"kueku/internal/api/response"
 	"kueku/internal/usecase"
 	"net/http"
 	"strconv"
@@ -20,7 +21,7 @@ func (h *Handler) List(c echo.Context) error {
 	if err != nil {
 		return err
 	}
-	return c.JSON(http.StatusOK, res)
+	return c.JSON(http.StatusOK, response.NewSuccessResponse(res))
 }
 
 func (h *Handler) Detail(c echo.Context) error {
@@ -32,7 +33,7 @@ func (h *Handler) Detail(c echo.Context) error {
 	if err != nil {
 		return err
 	}
-	return c.JSON(http.StatusOK, res)
+	return c.JSON(http.StatusOK, response.NewSuccessResponse(res))
 }
 
 func (h *Handler) Create(c echo.Context) error {
@@ -47,7 +48,7 @@ func (h *Handler) Create(c echo.Context) error {
 	if err != nil {
 		return err
 	}
-	return c.JSON(http.StatusOK, res)
+	return c.JSON(http.StatusOK, response.NewSuccessResponse(res))
 }
 
 func (h *Handler) Update(c echo.Context) error {
@@ -57,13 +58,13 @@ func (h *Handler) Update(c echo.Context) error {
 	if err := c.Bind(req); err != nil {
 		return err
 	}
-	
+
 	req.ID = c.Param("id")
 	res, err := h.CakeUsecase.Update(ctx, req.ToCommand())
 	if err != nil {
 		return err
 	}
-	return c.JSON(http.StatusOK, res)
+	return c.JSON(http.StatusOK, response.NewSuccessResponse(res))
 }
 
 func (h *Handler) Delete(c echo.Context) error {
@@ -75,5 +76,5 @@ func (h *Handler) Delete(c echo.Context) error {
 	if err != nil {
 		return err
 	}
-	return c.JSON(http.StatusOK, nil)
+	return c.JSON(http.StatusOK, response.NewSuccessResponse(nil))
 }

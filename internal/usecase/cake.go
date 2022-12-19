@@ -35,11 +35,12 @@ func (c *Cake) Detail(ctx context.Context, id int) (*cake.Cake, error) {
 
 func (c *Cake) Create(ctx context.Context, command *model.CreateCakeCommand) (*cake.Cake, error) {
 	data := command.ToCake()
-	if err := c.repo.Create(ctx, data); err != nil {
+	lid, err := c.repo.Create(ctx, data)
+	if err != nil {
 		return nil, err
 	}
 
-	return c.repo.GetByID(ctx, data.ID)
+	return c.repo.GetByID(ctx, lid)
 }
 
 func (c *Cake) Update(ctx context.Context, command *model.UpdateCakeCommand) (*cake.Cake, error) {

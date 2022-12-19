@@ -87,7 +87,7 @@ func (t *cakeUsecaseTestSuite) TestCreate_CreateError() {
 	mockErr := errors.New("unexpected")
 	mockCommand := new(model.CreateCakeCommand)
 
-	t.mockCakeRepo.EXPECT().Create(t.ctx, gomock.Any()).Return(mockErr)
+	t.mockCakeRepo.EXPECT().Create(t.ctx, gomock.Any()).Return(0, mockErr)
 
 	res, err := t.cakeUsecase.Create(t.ctx, mockCommand)
 
@@ -99,7 +99,7 @@ func (t *cakeUsecaseTestSuite) TestCreate_GetByIDError() {
 	mockErr := errors.New("unexpected")
 	mockCommand := new(model.CreateCakeCommand)
 
-	t.mockCakeRepo.EXPECT().Create(t.ctx, gomock.Any()).Return(nil)
+	t.mockCakeRepo.EXPECT().Create(t.ctx, gomock.Any()).Return(1, nil)
 	t.mockCakeRepo.EXPECT().GetByID(t.ctx, gomock.Any()).Return(nil, mockErr)
 
 	res, err := t.cakeUsecase.Create(t.ctx, mockCommand)
@@ -112,7 +112,7 @@ func (t *cakeUsecaseTestSuite) TestCreate_NoError() {
 	mockRes := new(cake.Cake)
 	mockCommand := new(model.CreateCakeCommand)
 
-	t.mockCakeRepo.EXPECT().Create(t.ctx, gomock.Any()).Return(nil)
+	t.mockCakeRepo.EXPECT().Create(t.ctx, gomock.Any()).Return(1, nil)
 	t.mockCakeRepo.EXPECT().GetByID(t.ctx, gomock.Any()).Return(mockRes, nil)
 
 	res, err := t.cakeUsecase.Create(t.ctx, mockCommand)

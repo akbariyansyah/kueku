@@ -65,11 +65,12 @@ func (mr *MockRepositoryMockRecorder) GetByID(ctx, id interface{}) *gomock.Call 
 }
 
 // Create mocks base method
-func (m *MockRepository) Create(ctx context.Context, data *cake.Cake) error {
+func (m *MockRepository) Create(ctx context.Context, data *cake.Cake) (int, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Create", ctx, data)
-	ret0, _ := ret[0].(error)
-	return ret0
+	ret0, _ := ret[0].(int)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
 }
 
 // Create indicates an expected call of Create

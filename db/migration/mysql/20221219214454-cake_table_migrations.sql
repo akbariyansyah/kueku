@@ -1,6 +1,6 @@
 -- +migrate Up
 CREATE TABLE cakes (
-    id INTEGER PRIMARY KEY,
+    id INTEGER PRIMARY KEY AUTO_INCREMENT,
     title VARCHAR (100) NOT NULL,
     description VARCHAR (100) NOT NULL,
     image VARCHAR (255) NOT NULL,

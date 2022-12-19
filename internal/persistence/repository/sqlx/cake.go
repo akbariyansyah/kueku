@@ -75,15 +75,18 @@ func (r *Cake) GetByID(ctx context.Context, id int) (*cake.Cake, error) {
 }
 
 // Create .
-func (r *Cake) Create(ctx context.Context, data *cake.Cake) error {
+func (r *Cake) Create(ctx context.Context, data *cake.Cake) (int, error) {
 	query, args, err := r.Query.Create(data)
 	if err != nil {
-		return repository.NewErrQuery(err)
+		return 0, repository.NewErrQuery(err)
 	}
-	if _, err := r.DB.ExecContext(ctx, query, args...); err != nil {
-		return repository.NewErrDatabase(err)
+	row, err := r.DB.ExecContext(ctx, query, args...)
+	if err != nil {
+		return 0, repository.NewErrDatabase(err)
 	}
-	return nil
+
+	lid, _ := row.LastInsertId()
+	return int(lid), nil
 }
 
 // Update .

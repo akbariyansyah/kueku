@@ -265,7 +265,7 @@ func (t *cakeTestSuite) TestCreate_QuerierError() {
 
 	t.mockQuerier.EXPECT().Create(mockData).Return("", nil, mockErr)
 
-	err := t.repo.Create(t.ctx, mockData)
+	_, err := t.repo.Create(t.ctx, mockData)
 
 	t.Equal(err, repository.NewErrQuery(mockErr))
 }
@@ -287,7 +287,7 @@ func (t *cakeTestSuite) TestCreate_ExecContextError() {
 		mockData.UpdatedAt,
 	).WillReturnError(mockErr)
 
-	err := t.repo.Create(t.ctx, mockData)
+	_, err := t.repo.Create(t.ctx, mockData)
 
 	t.NoError(t.mockSQL.ExpectationsWereMet())
 	t.Equal(err, repository.NewErrDatabase(mockErr))
@@ -308,7 +308,7 @@ func (t *cakeTestSuite) TestCreate_NoError() {
 		mockData.UpdatedAt,
 	).WillReturnResult(sqlmock.NewResult(1, 1))
 
-	err := t.repo.Create(t.ctx, mockData)
+	_, err := t.repo.Create(t.ctx, mockData)
 
 	t.NoError(t.mockSQL.ExpectationsWereMet())
 	t.NoError(err)
