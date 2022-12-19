@@ -7,6 +7,7 @@ import (
 	"kueku/internal/api"
 	"kueku/internal/api/cake"
 	"kueku/internal/container/founder"
+	"kueku/internal/pkg/logo"
 	"log"
 	"net/http"
 	"os"
@@ -19,7 +20,7 @@ import (
 )
 
 var (
-	path = "./config/config.example.yaml"
+	path = "./config/config.yml"
 )
 
 func Run() {
@@ -35,6 +36,7 @@ func Run() {
 
 	cake.CakeRoute(router, usecases.CakeUsecase())
 
+	log.Println(logo.GetLogo())
 	srv := &http.Server{
 		Addr:         fmt.Sprintf("127.0.0.1:%d", cfg.Port),
 		ReadTimeout:  cfg.Server.ReadTimeOut,
