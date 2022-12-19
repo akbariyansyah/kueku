@@ -1,0 +1,5 @@
+development:
+  dialect: mysql
+  datasource: root:secret@tcp(127.0.0.1:3306)/kueku?parseTime=true
+  dir: mysql
+  table: db_seeders

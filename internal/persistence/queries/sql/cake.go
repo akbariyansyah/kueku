@@ -20,8 +20,8 @@ func (c *Cake) Fetch() (string, []interface{}, error) {
 		"id",
 		"title",
 		"description",
-		"rating",
 		"image",
+		"rating",
 		"created_at",
 		"updated_at",
 	).From(cakeTable)
